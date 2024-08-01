@@ -1,0 +1,10 @@
+/* Add the CSS transitions for the menu */
+.navbar-menu {
+    transition:pacity 0.3s ease;
+  }
+  
+  /* Apply the open state styles */
+  .navbar-menu-open {
+    opacity: 1;
+  }
+  
