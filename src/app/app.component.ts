@@ -8,7 +8,7 @@ export class AppComponent {
   title = 'educate.tn';
   
   apiLoaded = false;
-
+ 
   ngOnInit() {
     if (!this.apiLoaded) {
       const tag = document.createElement('script');

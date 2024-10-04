@@ -1,7 +1,15 @@
 <div class="flex flex-wrap">
   <div class="w-full lg:w-2/3 p-4">
     <div class="bg-gray-900 rounded-lg overflow-hidden">
-      <iframe width="100%" class="sm:h-[550px] md:h-[550px]  h-[300px]" [src]="videoselected" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      <iframe width="100%" class="sm:h-[550px] md:h-[550px] h-[300px]"
+              [src]="videoselected"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+        (click)="trackLastMinute()"
+
+      </iframe>
     </div>
   </div>
 
@@ -9,11 +17,11 @@
     <div class="playlist-container">
       <h2 class="text-2xl font-bold mb-2">Playlist</h2>
       <ul class="playlist">
-        <li *ngFor="let v of playlist" (click)="changevideo(v.src)" class="flex items-center mb-4 cursor-pointer">
-          <img src="https://img.youtube.com/vi/{{v.src}}/maxresdefault.jpg" class="rounded w-32 h-20 mr-4" alt="Video Thumbnail">
+        <li *ngFor="let v of playlist" (click)="changevideo(v.videoLink,v.id)" class="flex items-center mb-4 cursor-pointer">
+          <img src="https://img.youtube.com/vi/{{v.videoId}}/maxresdefault.jpg" class="rounded w-32 h-20 mr-4" alt="Video Thumbnail">
           <div class="flex-grow">
-            <div class="text-lg font-bold">{{v.name}}</div>
-            <div class="text-gray-500">Video Duration or Description</div>
+            <div class="text-lg font-bold">{{v.title}}</div>
+            <div class="text-gray-500">{{v.duration}} : Min</div>
           </div>
         </li>
       </ul>
@@ -34,68 +42,26 @@
     </button>
   </h2>
   <div *ngIf="v" class="cards-container transition delay-150 duration-300 ease-in-out">
-    <div class="card">
-      <img src="document1.jpg" alt="Document 1" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 1</h3>
-        <p class="card-description">Document 1 description</p>
-      </div>
-    </div>
-    <div class="card">
+
+    <div *ngFor="let doc of documents"  (click)="selectDoc(doc)" class="card">
       <img src="../../assets/jess-bailey-q10VITrVYUM-unsplash.jpg" alt="Document 2" class="card-image">
       <div class="card-content">
-        <h3 class="card-title">Document 2</h3>
-        <p class="card-description">Document 2 description</p>
+        <h3 class="card-title">{{doc.name}}</h3>
+        <p class="card-description">{{doc.type}}</p>
       </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
-    <div class="card">
-      <img src="../../assets/cool-background.png" alt="Document 3" class="card-image">
-      <div class="card-content">
-        <h3 class="card-title">Document 3</h3>
-        <p class="card-description">Document 3 description</p>
-      </div>
-    </div>
+
   </div>
+ <div *ngIf="isPDFModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-screen overflow-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">{{selectedDoc?.name}}</h2>
+      <button (click)="closePDFModal()" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <pdf-viewer [src]="selectedDoc?.url" [render-text]="true" [original-size]="false" style="width: 100%; height: 70vh;"></pdf-viewer>
+  </div>
+</div>
 </div>

@@ -1,4 +1,7 @@
 import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
+import { DocumentService } from "../services/document.service";
+import { PaginatedResponse } from "../models/PaginatedResponse";
+import { Document } from "../models/Document";
 
 @Component({
   selector: 'app-document-search',
@@ -7,119 +10,46 @@ import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angu
 })
 export class DocumentSearchComponent {
   @ViewChild('container', { static: true }) containerRef!: ElementRef;
+  documents!: PaginatedResponse<Document>;
+  searchTerm!: string;
+  currentPage: number = 0;
 
-  cards = [
-    {
-      title: 'Card 1',
-      description: 'This is the first card.',
-    },
-    {
-      title: 'Card 2',
-      description: 'This is the second card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-    {
-      title: 'Card 3',
-      description: 'This is the third card.',
-    },
-  ];
-  slideIndex = 0;
-  cardWidth = 320;
-  cardMargin = 10;
-  containerWidth!: number;
-  containerOffsetX!: number;
-  isDragging = false;
-  dragStartX!: number;
-  dragOffsetX!: number;
-
-  constructor(private renderer: Renderer2) {}
+  constructor(private documentService: DocumentService) {}
 
   ngOnInit() {
-    this.containerWidth = this.containerRef.nativeElement.offsetWidth;
-    this.containerOffsetX = this.containerRef.nativeElement.offsetLeft;
+    this.search();
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.cards.length * this.cardWidth / (this.containerWidth - this.cardMargin));
+  search() {
+    this.documentService.searchDocs(this.searchTerm, this.currentPage, 10).subscribe((data) => {
+      this.documents = data;
+    });
   }
 
-  get overflowWidth(): string {
-    return `${(this.cardWidth + this.cardMargin) * this.cards.length}px`;
+  isPDFModalOpen = false;
+  selectedDoc!: Document;
+
+  selectDoc(doc: Document) {
+    this.documentService.generatePresignedUrl(doc.url).subscribe((data) => {
+      doc.url = data;
+      this.selectedDoc = doc;
+    });
+    this.isPDFModalOpen = true;
   }
 
-  get pagePosition(): string {
-    const position = this.slideIndex * (this.cardWidth + this.cardMargin) + this.dragOffsetX;
-    return `calc(-${position}px)`;
+  closePDFModal() {
+    this.isPDFModalOpen = false;
+  }
+  nextPage() {
+      this.currentPage++;
+      this.search();
+
   }
 
-  changePage(step: number) {
-    this.slideIndex = (this.slideIndex + step + this.totalPages) % this.totalPages;
-  }
-
-  onMouseDown(event: MouseEvent) {
-    if (event.button === 0) {
-      this.isDragging = true;
-      this.dragStartX = event.clientX;
-      this.renderer.addClass(this.containerRef.nativeElement, 'grabbing');
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.search();
     }
   }
-
-  onMouseUp(event: MouseEvent) {
-    if (this.isDragging && event.button === 0) {
-      this.isDragging = false;
-      this.dragOffsetX = 0;
-      this.renderer.removeClass(this.containerRef.nativeElement, 'grabbing');
-    }
-  }
-
-  onMouseMove(event: MouseEvent) {
-    if (this.isDragging) {
-      const dragDistance = event.clientX - this.dragStartX;
-      const maxOffsetX = this.containerWidth - (this.cardWidth + this.cardMargin) * this.cards.length;
-
-      if (dragDistance < maxOffsetX) {
-        this.dragOffsetX = maxOffsetX;
-      } else if (dragDistance > 0) {
-        this.dragOffsetX = 0;
-      } else {
-        this.dragOffsetX = dragDistance;
-      }
-    }
-  }
-
 }

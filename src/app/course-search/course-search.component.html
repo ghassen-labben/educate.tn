@@ -2,19 +2,16 @@
     <div class="container mx-auto px-4">
       <form class="mb-8 lg:mx-80">
         <div class="flex flex-col sm:flex-row items-center  rounded-full overflow-hidden py-8">
-          <input class="flex-grow rounded-lg outline-none px-4 py-2 sm:w-64 text-gray-800 placeholder-gray-500 focus:placeholder-gray-600" type="text" placeholder="Search for courses">
-          <button class="bg-blue-500 text-white text-base font-semibold px-6 py-2 sm:ml-4 mt-4 sm:mt-0 rounded-full shadow hover:bg-blue-600 transition duration-300">Search</button>
-        </div>
+          <input class="flex-grow rounded-full outline-none px-4 py-2 sm:w-64 text-gray-800 placeholder-blue-900  focus:placeholder-gray-600 border border-gray-400 border-2"
+          type="text" placeholder="Rechercher" [(ngModel)]="searchTerm" [ngModelOptions]="{ standalone: true }" (input)="search()">
+           </div>
       </form>
-  
+
       <div class="flex justify-left mt-16 lg:mx-28">
         <div class=" inline-flex">
-          <select id="category" class="border-2 px-4 py-2 pr-8 rounded-full text-gray-800 focus:border-blue-500 appearance-none">
-            <option value="all">All Majors</option>
-            <option value="economics">Economics</option>
-            <option value="computing">Computing</option>
-            <option value="technical">Technical</option>
-            <option value="other">Other</option>
+          <select id="category" [(ngModel)]="section"  (change)="getCourses()" class="border-2 px-4 py-2 pr-8 rounded-full text-gray-800 focus:border-blue-500 appearance-none">
+            <option selected value="">All Majors</option>
+            <option  *ngFor="let section of sections" [value]="section">{{section}}</option>
           </select>
           <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -23,81 +20,28 @@
           </div>
         </div>
       </div>
-  
+
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8 lg:mx-28 lg:mt-8">
-        <a class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer" href="course">
+        <div
+          *ngFor="let c of courses.content"
+          class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300"
+
+        >
           <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-          <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-            <p class="text-gray-700 text-base">Author Name</p>
-            <p class="text-gray-700 text-base">Number of Videos: 10</p>
-          </div>
-        </a>
-        <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
+
+          <div class="px-6 py-4 flex justify-between items-center">
+            <div>
+              <a     [routerLink]="['/course', c.id]" class="font-bold text-xl mb-2 text-gray-800 hover:underline hover:text-blue-800">{{c.courseName}}</a>
+              <p class="text-gray-700 text-base">{{c.instructor}}</p>
+              <p class="text-gray-700 text-base">Number of Videos: {{c.numLectures}}</p>
+            </div>
+            <div (click)="toggleFavorite(c)" class="cursor-pointer">
+              <i [ngClass]="{'fa-regular':!c.isFavorite,'fa-star':true,'fa-solid text-yellow-400':c.isFavorite}"></i>
             </div>
           </div>
-          <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </div>
-          <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </div>
-          <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </div>
-          <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </div>
-          <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </div>
-          <div class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </div>
-          <a class="border border-gray-300 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 cursor-pointer" href="/course">
-            <img class="w-full h-48 object-cover" src="../../assets/a-student-studying-at-a-desk.jpg" alt="Course Image">
-            <div class="px-6 py-4">
-              <div class="font-bold text-xl mb-2 text-gray-800">Course Name</div>
-              <p class="text-gray-700 text-base">Author Name</p>
-              <p class="text-gray-700 text-base">Number of Videos: 10</p>
-            </div>
-          </a>
-              </div>
+        </div>
+
+
+      </div>
     </div>
   </section>
-  

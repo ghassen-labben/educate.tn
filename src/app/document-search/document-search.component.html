@@ -1,107 +1,42 @@
-<div>
+<div class="p-8">
+  <!-- Search Bar and Category Selector -->
   <div class="flex justify-center mb-8">
     <div class="w-1/2 mx-auto bg-gray-200 rounded-md h-32">
-      <img class="object-contain w-full h-full rounded-md" src="ad_banner_top.jpg" alt="Ad Banner Top">
+      <img class="object-cover w-full h-full rounded-md" src="https://images.unsplash.com/photo-1697382608813-df6eb720164f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZG9jdW1lbnRzfGVufDB8fDB8fHww" alt="Ad Banner Top">
     </div>
   </div>
-<div class="mt-4 flex justify-center mb-8">
-  <input class="w-1/2 px-4 py-2 mx-28 border border-gray-500 rounded-md" type="text" placeholder="Search documents">
+  <div class="mt-4 flex justify-center mb-8">
+    <input class="w-1/2 px-4 py-2 mx-28 border border-gray-500 rounded-md" [(ngModel)]="searchTerm" [ngModelOptions]="{ standalone: true }" (input)="search()" type="text" placeholder="Search documents">
+  </div>
+  <div class="mx-2 md:mx-28 lg:mx-28 sm:mx-28 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"> <!-- Increased gap for spacing -->
+    <div *ngFor="let doc of documents.content" (click)="selectDoc(doc)" class="bg-gray-50 rounded-lg shadow-md p-4 cursor-pointer transition-transform transform hover:scale-105">
+      <div class="flex items-center mb-4">
+        <div class="h-20 w-16 mr-4 flex-shrink-0">
+          <img class="object-contain w-full h-full rounded-md border border-gray-200" src="https://cdn-icons-png.flaticon.com/512/6747/6747196.png" alt="Document Icon">
+        </div>
+        <div class="flex-1">
+          <h2 class="text-xl font-semibold text-gray-700">{{ doc.name }}</h2>
+          <p class="text-gray-500 text-sm">{{ doc.type }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-center mt-8">
+    <button class="px-4 py-2 bg-blue-500 text-white rounded-md" (click)="previousPage()">Previous</button>
+    <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md" (click)="nextPage()">Next</button>
+  </div>
 
-</div>
-
-  <!-- Ad Placement on the Left -->
- 
-
-<div class="mx-2 md:mx-28 lg:mx-28 sm:mx-28 mb-4 flex justify-center">
-  <select class="  mx-auto md:w-1/6 lg:w-1/6  sm:w-1/6 px-4 py-2 w-2/3 border border-blue-500 ">
-    <option value="">All Categories</option>
-    <option value="Category 1">Category 1</option>
-    <option value="Category 2">Category 2</option>
-    <option value="Category 3">Category 3</option>
-  </select>
-</div>
-<div class="mx-2 md:mx-28 lg:mx-28 sm:mx-28 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-  <!-- Document Cards -->
-  <div class="w-1/4 mx-2 bg-gray-200 rounded-md h-40">
-    <img class="object-contain w-full h-full rounded-md" src="" alt="Ad Banner Left">
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
+  <div *ngIf="isPDFModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-4 w-full max-w-4xl max-h-screen overflow-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">{{selectedDoc?.name}}</h2>
+        <button (click)="closePDFModal()" class="text-gray-500 hover:text-gray-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <pdf-viewer [src]="selectedDoc?.url" [render-text]="true" [original-size]="false" style="width: 100%; height: 70vh;"></pdf-viewer>
     </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
   </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Author: Ahmed manai</p>
-  </div>
-  
-  
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Category: Category 1</p>
-    <!-- Additional document information -->
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/good-looking-cute-girl-with-books-at-the-table.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Category: Category 1</p>
-    <!-- Additional document information -->
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-4">
-    <div class="h-40">
-      <img class="object-cover w-full h-full rounded-lg" src="../../assets/nature.jpg" alt="Document Image">
-    </div>
-    <h2 class="text-lg font-medium mb-2">Document 1</h2>
-    <p class="text-gray-500 text-sm">Category: Category 1</p>
-    <!-- Additional document information -->
-  </div>
-  <div class="w-1/4 mx-2 bg-gray-200 rounded-md h-40">
-    <img class="object-contain w-full h-full rounded-md" src="ad_banner_right.jpg" alt="Ad Banner Right">
-  </div>
-</div>
 </div>

@@ -2,22 +2,23 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CourseComponent } from './course/course.component';
 import { CourseSearchComponent } from './course-search/course-search.component';
-import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { ForumComponent } from './forum/forum.component';
-import { PostComponent } from './post/post.component';
-import { AddPostComponent } from './add-post/add-post.component';
 import { DocumentSearchComponent } from './document-search/document-search.component';
+import { ProfileComponent } from './profile/profile.component';
+import { CourseManagemenComponent } from './course-management/course-managemen.component';
+import {AdminGuard} from "./admin.guard";
+import {userGuard} from "./user.guard";
 
-const routes: Routes = [
-  { path: 'course', component: CourseComponent },
-  { path: 'searchcourse', component: CourseSearchComponent },
-  { path: 'login', component: LoginComponent },
-  { path: '', component: HomeComponent },
-  { path: 'forum', component: ForumComponent },
-  { path: 'post', component: PostComponent },
-  { path: 'addpost', component: AddPostComponent },
-  { path: 'searchDocuments', component: DocumentSearchComponent }
+export const routes: Routes = [
+  { path: 'course/:id', component: CourseComponent,canActivate: [userGuard] },
+  { path: 'searchcourse/:section', component: CourseSearchComponent,canActivate: [userGuard] },
+  { path: 'searchcourse', component: CourseSearchComponent,canActivate: [userGuard] },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent,canActivate: [userGuard] },
+
+  {path:'profile',component:ProfileComponent,canActivate: [userGuard]},
+  { path: 'searchDocuments', component: DocumentSearchComponent,canActivate: [userGuard] },
+  { path: 'course-management', component: CourseManagemenComponent , canActivate: [AdminGuard]}
 
 
 ];
